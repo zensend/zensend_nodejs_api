@@ -1,5 +1,5 @@
 {
-  "name": "zensend-nodejs-api",
+  "name": "zensend",
   "version": "1.0.0",
   "description": "A simple REST API for ZenSend in NodeJS",
   "main": "lib/zensend.js",

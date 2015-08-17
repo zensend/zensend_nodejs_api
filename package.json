@@ -1,13 +1,13 @@
 {
   "name": "zensend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple REST API for ZenSend in NodeJS",
   "main": "lib/zensend.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha"
   },
   "author": "Fonix",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "request":"2.x.x"
   },

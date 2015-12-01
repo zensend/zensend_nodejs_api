@@ -60,7 +60,7 @@ describe('#sendSms', function() {
   });
 
   it('sends the sms and returns the response object', function(done) {
-    var stubbedResponse = {txguid: "txguid", sms_parts: 1, encoding: "ucs2", numbers: 1, cost_in_pence: 12.34, new_balance_in_pence: 10.2};
+    var stubbedResponse = {txguid: "txguid", smsparts: 1, encoding: "ucs2", numbers: 1, cost_in_pence: 12.34, new_balance_in_pence: 10.2};
 
     stubSendSmsResponse(200, { success: stubbedResponse });
 

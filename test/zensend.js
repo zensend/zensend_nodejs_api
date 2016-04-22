@@ -173,6 +173,60 @@ describe('#lookupOperator', function() {
 
 });
 
+describe('#createMsisdnVerification', function() {
+
+  var stubCreateVerifyResponse = function(code, body, response) {
+
+    nock("https://verify.zensend.io")
+      .post("/api/msisdn_verify", body)
+      .reply(code, response);
+  };
+
+  it('returns a session', function(done) {
+    stubCreateVerifyResponse(200, "NUMBER=441234567890", {success: {"session": "SESS"}});
+    new zensend.Client("api_key").createMsisdnVerification("441234567890", {}, function(error, response) {
+      assert.equal(error, null);
+      assert.equal(response, "SESS");
+      done();
+    });
+
+    
+  });
+
+  it('can send message and originator', function(done) {
+    stubCreateVerifyResponse(200, "NUMBER=441234567890&MESSAGE=hello%20world&ORIGINATOR=ORIG", {success: {"session": "SESS"}});
+    new zensend.Client("api_key").createMsisdnVerification("441234567890", {"message": "hello world", originator: "ORIG"}, function(error, response) {
+      assert.equal(error, null);
+      assert.equal(response, "SESS");
+      done();
+    });
+
+    
+  });
+
+});
+
+describe('#msisdnVerificationStatus', function() {
+
+  var stubVerifyResponse = function(code, response) {
+    nock("https://verify.zensend.io")
+      .get("/api/msisdn_verify?SESSION=SESS")
+      .reply(code, response);
+  };
+
+  it('returns a msisdn', function(done) {
+    stubVerifyResponse(200, {success: {"msisdn": "441234567890"}});
+    new zensend.Client("api_key").msisdnVerificationStatus("SESS", function(error, response) {
+      assert.equal(error, null);
+      assert.equal(response, "441234567890");
+      done();
+    });
+
+    
+  });
+});
+
+
 describe('#checkBalance', function() {
   var checkBalanceFun = function(callback) {
     return function() {

@@ -12,6 +12,39 @@ describe("#initialisation", function() {
   });
 });
 
+describe("#createKeyword", function() {
+
+  var stubKeywordsResponse = function(code, params, response) {
+    nock('https://api.zensend.io')
+      .log(console.log)
+      .post('/v3/keywords', params)
+      .reply(code, response);
+  };
+
+  it('creates the keyword and returns the response object', function(done) {
+    var stubbedResponse = {cost_in_pence: 12.34, new_balance_in_pence: 10.2};
+
+    stubKeywordsResponse(200, "SHORTCODE=SC&KEYWORD=KW", { success: stubbedResponse });
+
+    new zensend.Client("api_key").createKeyword({"keyword": "KW", "shortcode": "SC"}, function(error, response) {
+      assert.deepEqual(response, {cost_in_pence: 12.34, new_balance_in_pence: 10.2});
+      done();
+    });
+  });
+
+  it('creates the keyword with extra options', function(done) {
+    var stubbedResponse = {cost_in_pence: 12.34, new_balance_in_pence: 10.2};
+
+    stubKeywordsResponse(200, "SHORTCODE=SC&KEYWORD=KW&MO_URL=http%3A%2F%2Fmo&IS_STICKY=false", { success: stubbedResponse });
+
+    new zensend.Client("api_key").createKeyword({"keyword": "KW", "shortcode": "SC", "is_sticky": false, "mo_url": "http://mo"}, function(error, response) {
+      assert.deepEqual(response, {cost_in_pence: 12.34, new_balance_in_pence: 10.2});
+      done();
+    });
+  }); 
+
+});
+
 describe('#sendSms', function() {
   var validParms = function() {
     return {originator: "ORIGINATOR", body: "BODY", numbers: ["447878787877"]}

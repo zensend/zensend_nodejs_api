@@ -39,6 +39,13 @@ describe('#sendSms', function() {
       .reply(code, response);
   };
 
+  var stubCreateSubAccountResponse = function(code, response) {
+    nock('https://api.zensend.io')
+      .post('/v3/sub_accounts')
+      .reply(code, response);
+  };
+
+
   it('requires the originator', function() {
     assert.throw(sendSmsFun(paramsExcept("originator")), Error, "missing required param: originator");
   });
@@ -57,6 +64,18 @@ describe('#sendSms', function() {
 
   it('throws an error for unexpected params', function() {
     assert.throw(sendSmsFun(paramsOverride("invalid", "invalid")), Error, "unexpected parameter: invalid");
+  });
+
+  it('can create a sub account', function(done) {
+    var stubbedResponse = {name: "Name", api_key: "ApiKey"};
+
+    stubCreateSubAccountResponse(200, { success: stubbedResponse });
+
+    new zensend.Client("api_key").createSubAccount({name: "Name"}, function(error, response) {
+      assert.deepEqual(response, {name: "Name", api_key: "ApiKey"});
+      done();      
+    });
+
   });
 
   it('sends the sms and returns the response object', function(done) {
